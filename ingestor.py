@@ -21,21 +21,21 @@ client = NvIngestClient(
 # gpu_cagra accelerated indexing is not available in milvus-lite
 # Provide a filename for milvus_uri to use milvus-lite
 milvus_uri = "milvus.db"
-collection_name = "LnT"
+collection_name = "lnt"
 sparse = False
 
 # do content extraction from files                                
 ingestor = (
     Ingestor(client=client)
-    .files("/home/dell/nemo-retriver/annual.pdf")
+    .files("/home/dell/nemo-retriver/test_page.pdf")
     .extract(
         extract_text=True,
         extract_tables=True,
-        extract_charts=True,
-        extract_images=True,
+        extract_charts=False,
+        extract_images=False,
         paddle_output_format="markdown",
-        extract_infographics=True,
-        # extract_method="nemoretriever_parse", #Slower, but maximally accurate, especially for PDFs with pages that are scanned images
+        extract_infographics=False,
+        extract_method="nemoretriever_parse", #Slower, but maximally accurate, especially for PDFs with pages that are scanned images
         text_depth="page"
     ).embed()
     .vdb_upload(
