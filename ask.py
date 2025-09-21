@@ -6,23 +6,26 @@ milvus_uri = "milvus.db"
 collection_name = "lnt"
 sparse=False
 
-#queries = ["Which animal is responsible for the typos?"]
-#queries = ["how many engineering professionals get hired in FY 2024-25?"]
-queries = ["what is % of shares held by the listed entity Graphene Solutions Taiwan Ltd."]
+queries = ["which one hold more shares Grameen Capital India Private Limited or Graphene Solutions Taiwan Ltd?e"]
+#queries = ["what is % of shares held by the listed entity Graphene Solutions Taiwan Ltd."]
+#queries = ["what is % of shares held by the listed entity  Grameen Capital India Private Limited."]
 
 retrieved_docs = nvingest_retrieval(
     queries,
     collection_name,
     milvus_uri=milvus_uri,
     hybrid=sparse,
-    top_k=1,
+    top_k=5,
 )
 
 # simple generation example
-extract = retrieved_docs[0][0]["entity"]["text"]
+#extract = retrieved_docs[0][0]["entity"]["text"]
+extract = "\n\n".join(
+    [doc["entity"]["text"] for doc in retrieved_docs[0]]
+)
 client = OpenAI(
   base_url = "https://integrate.api.nvidia.com/v1",
-  api_key = "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" ##os.environ["NVIDIA_API_KEY"]
+  api_key = os.environ["NVIDIA_API_KEY"]
 )
 
 prompt = f"Using the following content: {extract}\n\n Answer the user query: {queries[0]}"
